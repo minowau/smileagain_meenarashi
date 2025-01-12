@@ -1,0 +1,41 @@
+/* Main container for friends and chat */
+.friends-chat-container {
+  display: flex;
+  height: calc(100vh - 60px); /* Full height minus navigation bar */
+  width: 100%;
+}
+
+/* Friends list styles */
+.friend-list {
+  flex: 1; /* 1/4th width */
+  background-color: black; 
+  padding: 1rem;
+  border-right: 1px solid #ddd; /* Separate with a border */
+  overflow-y: auto; /* Scrollable list */
+}
+
+.friend-item {
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.friend-item:hover,
+.friend-item.active {
+  background-color: #007bff; /* Highlight color */
+  color: white;
+}
+
+/* Chat section styles */
+.chat-section-friend {
+  flex: 3; /* 3/4th width */
+  padding: 0;
+  color: white;
+  background-color: black; /* White background for chat */
+  overflow-y: auto; /* Scrollable chat section */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
