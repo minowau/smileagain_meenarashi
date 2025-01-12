@@ -233,3 +233,73 @@ python init_db.py  # Loads initial data
 ├── .gitignore
 └── requirements.txt
 
+##API Documentation 📚
+
+###Authentication Endpoints
+- POST /auth/register - User registration
+- POST /auth/login - User login
+- POST /auth/logout - User logout
+
+###Chat Endpoints
+
+- POST /bot/chat - Send message to AI bot
+- GET /chat/history - Retrieve chat history
+
+###Community Endpoints
+
+- GET /groups - List available groups
+- POST /groups - Create new group
+- POST /groups/<id>/join - Join specific group
+
+###User Management Endpoints
+
+- GET /profile - Get user profile
+- PUT /profile - Update user profile
+- GET /friends - List friends
+- POST /friend-request - Send friend request
+
+###Contributing 🤝
+
+- Fork the repository
+- Create your feature branch (git checkout -b feature/AmazingFeature)
+- Commit your changes (git commit -m 'Add some AmazingFeature')
+- Push to the branch (git push origin feature/AmazingFeature)
+- Open a Pull Request
+
+##Core Features Implementation Details 🔧
+
+##Multi lingual AI Chatbot Capabilities
+###Anonymous User System
+###Unique identifier generation
+###Privacy-focused data storage
+###Secure session management
+###Emotional state detection
+###Crisis intervention protocols
+###Contextual response generation
+###Conversation history management
+###Community Management
+###Stress Tracking System
+###User stress level monitoring
+###Intervention triggers
+###Progress visualization
+###Milestone achievement system
+
+##Security Considerations 🔒
+
+-All sensitive data is encrypted at rest
+-Regular security audits
+-Rate limiting on all endpoints
+-Input validation and sanitization
+-XSS and CSRF protection
+-Regular dependency updates
+
+###License 📄
+-Distributed under the MIT License. See LICENSE for more information.
+###Support 💡
+-For support, email support@smileagain.com or join our Slack channel.
+Acknowledgments 🙏
+-Open source community
+-All contributors and supporters
+
+
+###Built with ❤️ by the Smile Again Team
