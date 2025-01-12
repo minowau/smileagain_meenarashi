@@ -1,0 +1,147 @@
+.community-page {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.community-sidebar {
+  width: 25%;
+  padding: 20px;
+  height: 850px;
+  background-color: black;
+  border-right: 1px solid #ddd;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.community-sidebar h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.community-sidebar p {
+  margin-bottom: 20px;
+  color: white;
+}
+
+.community-stats {
+  font-size: 14px;
+  color: white;
+}
+
+.community-main {
+  width: 75%;
+  padding: 20px;
+}
+
+.create-post {
+  margin-bottom: 20px;
+}
+
+.create-post textarea {
+  width: 95%;
+  height: 80px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  resize: none;
+}
+
+.create-post button {
+  padding: 10px 20px;
+  font-size: 14px;
+  color: #fff;
+  /* background-color: #007bff; */
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.create-post button:hover{
+  transform: none;
+}
+
+.create-post button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.community-post-submit{
+  width: 100%;
+}
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.post-card {
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.post-content {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.post-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.like-button, .comment-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  color: #007bff;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 5px 15px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.activities-button{
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  height: 60px;
+  width: 200px;
+  margin-top: 20px;
+  color: white;
+}
