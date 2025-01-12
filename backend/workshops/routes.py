@@ -1,0 +1,153 @@
+from flask import request, jsonify
+from flask_login import login_required, current_user
+from models import UserProblem, Workshop, User, Feedback
+from extensions import db
+from .utils import admin_required
+from . import workshops_bp  # Import the blueprint from __init__.py
+
+@workshops_bp.route('/list', methods=['GET'])
+@login_required
+def list_workshops():
+    # Get user's problem details from UserProblem model
+    user_problem = UserProblem.query.filter_by(user_id=current_user.id).first()
+    
+    # If no smile reason is set, return all workshops
+    if not user_problem or not user_problem.smile_reason:
+        workshops = Workshop.query.order_by(
+            Workshop.sponsored.desc(),
+            Workshop.id.desc()
+        ).all()
+    else:
+        # Filter workshops by smile reason
+        workshops = Workshop.query.filter_by(tag=user_problem.smile_reason).order_by(
+            Workshop.sponsored.desc(),
+            Workshop.id.desc()
+        ).all()
+
+    workshops_data = []
+    for workshop in workshops:
+        feedback_list = Feedback.query.filter_by(workshop_id=workshop.id).all()
+        avg_rating = sum(f.rating for f in feedback_list) / len(feedback_list) if feedback_list else None
+
+        creator = User.query.get(workshop.created_by)
+        creator_name = creator.name if creator else "Unknown"
+
+        workshops_data.append({
+            'id': workshop.id,
+            'title': workshop.title,
+            'description': workshop.description,
+            'banner_url': workshop.banner_url,
+            'meet_link': workshop.meet_link if not workshop.is_paid else None,
+            'is_paid': workshop.is_paid,
+            'price': workshop.price,
+            'sponsored': workshop.sponsored,
+            'tag': workshop.tag,
+            'created_by': creator_name,
+            'average_rating': avg_rating
+        })
+
+    return jsonify(workshops_data)
+
+@workshops_bp.route('/create', methods=['POST'])
+@login_required
+def create_workshop():
+    data = request.json
+    title = data.get('title')
+    description = data.get('description')
+    banner_url = data.get('banner_url')
+    meet_link = data.get('meet_link')
+    price = data.get('price', 0.0)
+    sponsored = data.get('sponsored', False)
+    tag = data.get('tag')
+
+    if not (title and description and banner_url and meet_link and tag):
+        return jsonify({'error': 'All fields are required'}), 400
+
+    new_workshop = Workshop(
+        title=title,
+        description=description,
+        banner_url=banner_url,
+        meet_link=meet_link,
+        price=price,
+        is_paid=(int(price) >= 0),
+        sponsored=sponsored,
+        tag=tag,
+        created_by=current_user.id
+    )
+    db.session.add(new_workshop)
+    db.session.commit()
+    return jsonify({'message': 'Workshop created successfully', 'workshop_id': new_workshop.id})
+
+@workshops_bp.route('/<int:workshop_id>/promote', methods=['POST'])
+@login_required
+@admin_required
+def promote_workshop(workshop_id):
+    workshop = Workshop.query.get(workshop_id)
+    if not workshop:
+        return jsonify({'error': 'Workshop not found'}), 404
+
+    workshop.sponsored = True
+    db.session.commit()
+    return jsonify({'message': 'Workshop promoted successfully'})
+
+@workshops_bp.route('/<int:workshop_id>', methods=['DELETE'])
+@login_required
+@admin_required
+def delete_workshop(workshop_id):
+    workshop = Workshop.query.get(workshop_id)
+    if not workshop:
+        return jsonify({'error': 'Workshop not found'}), 404
+
+    db.session.delete(workshop)
+    db.session.commit()
+    return jsonify({'message': 'Workshop deleted successfully'})
+
+@workshops_bp.route('/<int:workshop_id>/feedback', methods=['POST'])
+@login_required
+def submit_feedback(workshop_id):
+    data = request.json
+    comments = data.get('comments')
+    rating = data.get('rating')
+
+    if not rating:
+        return jsonify({'error': 'Rating is required'}), 400
+
+    if not (1 <= rating <= 5):
+        return jsonify({'error': 'Rating must be between 1 and 5'}), 400
+
+    existing_feedback = Feedback.query.filter_by(
+        workshop_id=workshop_id, 
+        user_id=current_user.id
+    ).first()
+    
+    if existing_feedback:
+        return jsonify({'error': 'You have already submitted feedback for this workshop'}), 400
+
+    feedback = Feedback(
+        workshop_id=workshop_id,
+        user_id=current_user.id,
+        comments=comments,
+        rating=rating
+    )
+    db.session.add(feedback)
+    db.session.commit()
+    return jsonify({'message': 'Feedback submitted successfully'})
+
+@workshops_bp.route('/<int:workshop_id>/feedback', methods=['GET'])
+@login_required
+def view_feedback(workshop_id):
+    workshop = Workshop.query.get(workshop_id)
+    if not workshop:
+        return jsonify({'error': 'Workshop not found'}), 404
+
+    feedback_list = Feedback.query.filter_by(workshop_id=workshop_id).all()
+    feedback_data = [
+        {
+            'user': User.query.get(feedback.user_id).name,
+            'comments': feedback.comments,
+            'rating': feedback.rating,
+            'timestamp': feedback.timestamp.isoformat()
+        }
+        for feedback in feedback_list
+    ]
+    return jsonify({'workshop_title': workshop.title, 'feedback': feedback_data})
